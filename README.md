@@ -1,4 +1,4 @@
-# MovieVault - Movie Search Application
+# Descovery Movies - Movie Search Application
 
 MovieVault is a modern, responsive movie search application built with React and Tailwind CSS. It allows users to discover movies, view detailed information, and manage their favorite list with advanced features like caching, lazy loading, and smooth animations.
 
