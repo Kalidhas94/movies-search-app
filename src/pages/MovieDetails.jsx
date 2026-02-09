@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getMovieDetails } from '../services/omdbApi';
 import { ArrowLeft, Star, Heart, Calendar, Clock, Film, Globe, Award, Users, Clapperboard, Zap } from 'lucide-react';
 import { useFavorites } from '../context/FavoritesContext';
+import StarRating from '../components/StarRating';
 
 const MovieDetails = () => {
     const { id } = useParams();
@@ -81,6 +82,7 @@ const MovieDetails = () => {
 
     const posterUrl = movie.Poster !== 'N/A' ? movie.Poster : 'https://via.placeholder.com/300x450?text=No+Poster';
     const rating = movie.imdbRating !== 'N/A' ? parseFloat(movie.imdbRating) : null;
+    const imdbAverageOutOf5 = rating ? Math.round((rating / 2) * 10) / 10 : null; // scaled to 5
     const actors = movie.Actors && movie.Actors !== 'N/A' ? movie.Actors.split(', ') : [];
     const genres = movie.Genre && movie.Genre !== 'N/A' ? movie.Genre.split(', ') : [];
 
@@ -142,6 +144,17 @@ const MovieDetails = () => {
                                 <p className="text-sm text-gray-400">IMDb Rating</p>
                             </div>
                         )}
+
+                        {/* User Rating (1-5 stars) */}
+                        <div className="glass rounded-xl p-4 space-y-2">
+                            <h4 className="text-sm font-semibold text-gray-300">Your Rating</h4>
+                            <div className="flex items-center justify-center">
+                                <StarRating movieId={movie.imdbID} size={6} />
+                            </div>
+                            {imdbAverageOutOf5 && (
+                                <p className="text-xs text-gray-400 text-center">Average (IMDb scaled): {imdbAverageOutOf5} / 5</p>
+                            )}
+                        </div>
 
                         {/* Favorite Button */}
                         <button

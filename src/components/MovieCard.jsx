@@ -6,8 +6,9 @@ import { useFavorites } from '../context/FavoritesContext';
 const MovieCard = ({ movie, viewMode = 'grid' }) => {
     const [imageLoaded, setImageLoaded] = useState(false);
     const [imageError, setImageError] = useState(false);
-    const { isFavorite, addFavorite, removeFavorite } = useFavorites();
+    const { isFavorite, addFavorite, removeFavorite, getRating } = useFavorites();
     const favorited = isFavorite(movie.imdbID);
+    const userRating = getRating(movie.imdbID);
 
     const toggleFavorite = (e) => {
         e.preventDefault(); // Prevent navigation
@@ -142,6 +143,16 @@ const MovieCard = ({ movie, viewMode = 'grid' }) => {
                 <div className="absolute bottom-20 left-2 z-10 flex items-center gap-1 px-3 py-1 bg-yellow-500/90 rounded-lg text-white text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <Star className="w-4 h-4 fill-current" />
                     {rating.toFixed(1)}
+                </div>
+            )}
+
+            {/* User Rating (1-5) */}
+            {userRating && (
+                <div className="absolute bottom-2 left-2 z-10 flex items-center gap-1 px-2 py-1 bg-black/60 rounded text-yellow-400 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                        <Star key={i} className={`w-3 h-3 ${i < userRating ? 'fill-current' : ''}`} />
+                    ))}
+                    <span className="ml-2 text-white text-xs">{userRating}/5</span>
                 </div>
             )}
 

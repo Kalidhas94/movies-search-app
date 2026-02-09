@@ -10,9 +10,18 @@ export const FavoritesProvider = ({ children }) => {
         return saved ? JSON.parse(saved) : [];
     });
 
+    const [ratings, setRatings] = useState(() => {
+        const saved = localStorage.getItem('movieRatings');
+        return saved ? JSON.parse(saved) : {}; // { [imdbID]: number }
+    });
+
     useEffect(() => {
         localStorage.setItem('movieFavorites', JSON.stringify(favorites));
     }, [favorites]);
+
+    useEffect(() => {
+        localStorage.setItem('movieRatings', JSON.stringify(ratings));
+    }, [ratings]);
 
     const addFavorite = (movie) => {
         setFavorites((prev) => {
@@ -36,8 +45,37 @@ export const FavoritesProvider = ({ children }) => {
         return favorites.some(movie => movie.imdbID === id);
     };
 
+    const setRating = (id, value) => {
+        setRatings((prev) => {
+            const next = { ...prev };
+            if (value == null) {
+                delete next[id];
+            } else {
+                next[id] = value;
+            }
+            return next;
+        });
+    };
+
+    const getRating = (id) => {
+        return ratings[id] ?? null;
+    };
+
+    const removeRating = (id) => {
+        setRating(id, null);
+    };
+
     return (
-        <FavoritesContext.Provider value={{ favorites, addFavorite, removeFavorite, isFavorite }}>
+        <FavoritesContext.Provider value={{
+            favorites,
+            addFavorite,
+            removeFavorite,
+            isFavorite,
+            ratings,
+            setRating,
+            getRating,
+            removeRating,
+        }}>
             {children}
         </FavoritesContext.Provider>
     );
